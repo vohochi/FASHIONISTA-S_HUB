@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
 import { IonIcon } from '@ionic/react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import Switch from '@mui/material/Switch';
 import {
   searchOutline,
   personOutline,
   heartOutline,
   bagHandleOutline,
+  logoFacebook,
+  logoTwitter,
+  logoInstagram,
+  logoLinkedin,
 } from 'ionicons/icons';
-import LogIn from '../pages/LogIn';
+import UserProvider from '../context/UserContext';
+
+const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
 const HeaderTop: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleShowLoginModal = () => {
     setShowLoginModal(true);
-    setSearchParams({ login: 'true' });
   };
 
   const handleCloseLoginModal = () => {
@@ -33,11 +38,15 @@ const HeaderTop: React.FC = () => {
       <div className="header-top">
         <div className="container">
           <ul className="header-social-container">
-            {[1, 2, 3, 4].map((item) => (
-              <li key={item}>
-                <a href="#" className="social-link"></a>
-              </li>
-            ))}
+            {[logoFacebook, logoTwitter, logoInstagram, logoLinkedin].map(
+              (item) => (
+                <li key={item}>
+                  <a href="#" className="social-link">
+                    <IonIcon icon={item} />
+                  </a>
+                </li>
+              )
+            )}
           </ul>
           <div className="header-alert-news">
             <p>
@@ -45,6 +54,9 @@ const HeaderTop: React.FC = () => {
             </p>
           </div>
           <div className="header-top-actions">
+            <div>
+              <Switch {...label} defaultChecked color="warning" />
+            </div>
             <select name="currency">
               <option value="usd">VNĐ 💵</option>
               <option value="eur">USD 💵 </option>
@@ -52,6 +64,9 @@ const HeaderTop: React.FC = () => {
             <select name="language">
               <option value="vi-Vi">VIE</option>
               <option value="en-US">ENG</option>
+            </select>
+            <select name="Page" onClick={() => handleNavigate('/admin')}>
+              <option value="1">Admin</option>
             </select>
           </div>
         </div>
@@ -81,9 +96,18 @@ const HeaderTop: React.FC = () => {
 
           <div className="header-user-actions">
             <button onClick={handleShowLoginModal} className="action-btn">
-              <Modal show={showLoginModal} onHide={handleCloseLoginModal}>
-                <LogIn />
+              {/* <BadgeAvatars /> */}
+              <Modal
+                show={showLoginModal}
+                onHide={handleCloseLoginModal}
+                backdrop="static"
+                aria-labelledby="login-modal"
+              >
+                <div onClick={(e) => e.stopPropagation()}>
+                  <UserProvider />
+                </div>
               </Modal>
+
               <IonIcon icon={personOutline} />
             </button>
             <button className="action-btn">
@@ -115,15 +139,27 @@ const HeaderTop: React.FC = () => {
               </a>
             </li>
 
-            <li className="menu-category">
-              <a href="#" className="menu-title">
-                Blog
-              </a>
+            <li
+              className="menu-category"
+              onClick={() => handleNavigate('/cart')}
+            >
+              <a className="menu-title">Cart</a>
             </li>
 
-            <li className="menu-category">
+            <li
+              className="menu-category"
+              onClick={() => handleNavigate('/checkOut')}
+            >
               <a href="#" className="menu-title">
-                Hot Offers
+                Checkout
+              </a>
+            </li>
+            <li
+              className="menu-category"
+              onClick={() => handleNavigate('/profile')}
+            >
+              <a href="#" className="menu-title">
+                Profile
               </a>
             </li>
           </ul>

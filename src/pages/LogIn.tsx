@@ -1,46 +1,55 @@
 import React, { useState } from 'react';
-import Register from './Register';
 import '../styles/vector.css';
 import '../styles/vendor.css';
 import '../styles/themmin.css';
-// import { useSearchParams } from 'react-router-dom';
+import { IonIcon } from '@ionic/react';
+import { close, eye } from 'ionicons/icons';
+import ForgetPassword from './ForgetPassword';
+import Error from '../components/Error';
+import Process from '../components/Process';
+import { useFormContext } from 'react-hook-form';
+import UserProvider from '../context/UserContext';
+interface LoginProps {
+  onSwitchToRegister: () => void;
+}
 
-interface LoginProps {}
+const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
+  const [activeForm, setActiveForm] = useState('login');
 
-const LogIn: React.FC<LoginProps> = () => {
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext();
 
-  const handleShowRegisterForm = () => {
-    setShowRegisterForm(true);
-    // setSearchParams({ Register: 'true' });
+  const handleShowForgotPasswordForm = () => {
+    setActiveForm('forgotPassword');
   };
 
-  const handleShowLoginForm = () => {
-    setShowRegisterForm(false);
+  const onSubmit = () => {
+    console.log('submit');
   };
+
   return (
-    <div>
-      {showRegisterForm ? (
-        <Register handleShowLoginForm={handleShowLoginForm} />
-      ) : (
+    <>
+      {activeForm === 'register' && <UserProvider />}
+      {activeForm === 'login' && (
         <main id="content" role="main" className="main">
           <div className="container py-5 py-sm-7">
             <div className="row justify-content-center">
               <div className="col-md-7 col-lg-12">
                 <div className="card card-lg mb-5">
+                  {' '}
                   <div className="card-body">
-                    {/* Form */}
-                    <form className="js-validate">
+                    <IonIcon className="close" icon={close} />
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="js-validate"
+                    >
                       <div className="text-center">
                         <div className="mb-5">
-                          <h1 className="display-4">Sign in</h1>
-                          <p>
-                            Bạn đã có tài khoản ?
-                            <a onClick={handleShowRegisterForm}>
-                              Tạo tài khoản mới
-                            </a>
-                          </p>
+                          <h1 className="display-4">Đăng nhập</h1>
+                          <Process />
                         </div>
 
                         <a
@@ -65,17 +74,20 @@ const LogIn: React.FC<LoginProps> = () => {
                         <label className="input-label" htmlFor="signinSrEmail">
                           Your email
                         </label>
-
                         <input
-                          type="email"
-                          className="form-control form-control-lg"
-                          name="email"
+                          // type="email"
+                          className={`form-control form-control-lg ${
+                            errors.email ? 'error' : 'success'
+                          }`}
                           id="signinSrEmail"
                           placeholder="email@address.com"
                           aria-label="email@address.com"
-                          required
                           data-msg="Please enter a valid email address."
+                          {...register('email')}
                         />
+                        {errors.email && (
+                          <Error error={errors.email.message?.toString()} />
+                        )}
                       </div>
                       {/* End Form Group */}
 
@@ -89,8 +101,8 @@ const LogIn: React.FC<LoginProps> = () => {
                           <span className="d-flex justify-content-between align-items-center">
                             Password
                             <a
+                              onClick={handleShowForgotPasswordForm}
                               className="input-label-secondary"
-                              href="authentication-reset-password-basic.html"
                             >
                               Forgot Password?
                             </a>
@@ -100,12 +112,12 @@ const LogIn: React.FC<LoginProps> = () => {
                         <div className="input-group input-group-merge">
                           <input
                             type="password"
-                            className="js-toggle-password form-control form-control-lg"
-                            name="password"
+                            className={`form-control form-control-lg ${
+                              errors.password ? 'error' : 'success'
+                            }`}
                             id="signupSrPassword"
-                            placeholder="8+ characters required"
-                            aria-label="8+ characters required"
-                            required
+                            placeholder="8+ characters "
+                            aria-label="8+ characters "
                             data-msg="Your password is invalid. Please try again."
                             data-hs-toggle-password-options='{
                                  "target": "#changePassTarget",
@@ -113,16 +125,20 @@ const LogIn: React.FC<LoginProps> = () => {
                                  "showClass": "tio-visible-outlined",
                                  "classChangeTarget": "#changePassIcon"
                                }'
+                            {...register('password')}
                           />
+                          {errors.password && (
+                            <Error
+                              error={errors.password.message?.toString()}
+                            />
+                          )}
+
                           <div
                             id="changePassTarget"
                             className="input-group-append"
                           >
                             <a className="input-group-text">
-                              <i
-                                id="changePassIcon"
-                                className="tio-visible-outlined"
-                              ></i>
+                              <IonIcon className="close" icon={eye} />
                             </a>
                           </div>
                         </div>
@@ -130,7 +146,7 @@ const LogIn: React.FC<LoginProps> = () => {
                       {/* End Form Group */}
 
                       {/* Checkbox */}
-                      <div className="form-group">
+                      <div className="form-group d-flex justify-content-between">
                         <div className="custom-control custom-checkbox">
                           <input
                             type="checkbox"
@@ -145,13 +161,18 @@ const LogIn: React.FC<LoginProps> = () => {
                             Remember me
                           </label>
                         </div>
+                        <button
+                          onClick={onSwitchToRegister}
+                          className="item-right"
+                        >
+                          Đăng ký
+                        </button>
                       </div>
                       {/* End Checkbox */}
 
                       <button
                         type="submit"
                         className="btn btn-lg btn-block btn-primary"
-                        onClick={handleShowLoginForm}
                       >
                         Sign in
                       </button>
@@ -200,14 +221,13 @@ const LogIn: React.FC<LoginProps> = () => {
                     </div>
                   </div>
                 </div>
-                {/* End Footer */}
               </div>
             </div>
           </div>
-          {/* End Content */}
         </main>
       )}
-    </div>
+      {activeForm === 'forgotPassword' && <ForgetPassword />}{' '}
+    </>
   );
 };
 

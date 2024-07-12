@@ -2956,11 +2956,48 @@ textarea.form-control {
 .was-validated .form-control:invalid {
   border-color: #ed4c78;
 }
-
+.error:focus {
+  border-color: red;
+}
+.success:focus {
+  border-color: #00c9a7;
+}
 .form-control.is-invalid:focus,
 .was-validated .form-control:invalid:focus {
   border-color: #ed4c78;
   box-shadow: 0 0 0 0.2rem rgba(237, 76, 120, 0.25);
+}
+@media (min-width: 1025px) {
+.h-custom {
+height: 100vh !important;
+}
+}
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+font-size: 1rem;
+line-height: 2.15;
+padding-left: .75em;
+padding-right: .75em;
+}
+
+.card-registration .select-arrow {
+top: 13px;
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid transparent;
+    border-radius: .25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+}
+.me-2 {
+    margin-right: .5rem!important;
 }
 
 .custom-select.is-invalid,
@@ -6902,7 +6939,7 @@ a.close.disabled {
 }
 
 .modal-backdrop {
-  /* position: fixed; */
+  position: static !important;
   top: 0;
   left: 0;
   z-index: 102;
@@ -6914,10 +6951,10 @@ a.close.disabled {
 .modal-backdrop.fade {
   opacity: 0;
 }
-
+/* 
 .modal-backdrop.show {
   opacity: 1;
-}
+} */
 
 .modal-header {
   display: -ms-flexbox;
@@ -30306,4 +30343,36 @@ a:hover .text-hover-primary {
 .tagify.tagify-form-control-list {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+.card-header {
+  padding: 0.5rem 1rem;
+}
+.close {
+  margin-right: -0.5rem;
+}
+.size-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.size-button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.3s;
+  width: 100px; /* Điều chỉnh độ rộng của nút */
+}
+
+.size-button:hover {
+  background-color: #f0f0f0;
+}
+
+.size-button.selected {
+  background-color: #007bff; /* Màu xanh dương */
+  color: #fff;
 }

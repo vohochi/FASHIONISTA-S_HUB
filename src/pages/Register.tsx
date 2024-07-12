@@ -1,9 +1,39 @@
 import React from 'react';
+import { IonIcon } from '@ionic/react';
+import { close, eye } from 'ionicons/icons';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useFormContext } from 'react-hook-form';
+import Error from '../components/Error';
+import Process from '../components/Process';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 interface RegisterProps {
-  handleShowLoginForm: () => void;
+  onSwitchToLogin: () => void;
 }
-const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
+const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext();
+
+  const onSubmit = () => {
+    console.log('submit');
+  };
+
   return (
     <main id="content" role="main" className="main">
       <div className="container py-5 py-sm-7">
@@ -11,11 +41,13 @@ const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
           <div className="col-md-7 col-lg-12">
             <div className="card card-lg mb-5">
               <div className="card-body">
+                <IonIcon className="close" icon={close} />
                 {/* Form */}
-                <form className="js-validate">
+                <form className="js-validate" onSubmit={handleSubmit(onSubmit)}>
                   <div className="text-center">
                     <div className="mb-5">
                       <h1 className="display-4">Tạo tài khoản mới</h1>
+                      <Process />
                     </div>
 
                     <a className="btn btn-lg btn-block btn-white mb-4" href="#">
@@ -35,53 +67,63 @@ const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
                   {/* Form Group */}
                   <div className="js-form-message form-group">
                     <label className="input-label" htmlFor="fullNameSrEmail">
-                      Full name
+                      Name
                     </label>
                     <div className="form-row">
                       <div className="col-sm-6">
                         <div className="js-form-message form-group">
                           <input
-                            type="email"
-                            className="form-control form-control-lg"
-                            name="email"
-                            id="signinSrEmail"
+                            type="name"
+                            className={`form-control form-control-lg ${
+                              errors.name ? 'error' : 'success'
+                            }`}
+                            id="name"
                             placeholder="Chi"
-                            aria-label="email@address.com"
-                            required
+                            aria-label="******"
                             data-msg="Please enter a valid email address."
+                            {...register('name')}
                           />
+                          {errors.name && (
+                            <Error error={errors.name.message?.toString()} />
+                          )}
                         </div>
                       </div>
 
                       <div className="col-sm-6">
                         <div className="js-form-message form-group">
                           <input
-                            type="email"
-                            className="form-control form-control-lg"
-                            name="email"
-                            id="signinSrEmail"
+                            type="fullName"
+                            className={`form-control form-control-lg ${
+                              errors.fullName ? 'error' : 'success'
+                            }`}
+                            id="fullName"
                             placeholder="Vo"
-                            aria-label="email@address.com"
-                            required
+                            aria-label="******"
                             data-msg="Please enter a valid email address."
+                            {...register('fullName')}
                           />
+                          {errors.fullName && (
+                            <Error
+                              error={errors.fullName.message?.toString()}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
-                    <label className="input-label" htmlFor="signinSrEmail">
-                      Your email
-                    </label>
-
+                    <label className="input-label">Email</label>
                     <input
-                      type="email"
-                      className="form-control form-control-lg"
-                      name="email"
-                      id="signinSrEmail"
-                      placeholder="email@address.com"
-                      aria-label="email@address.com"
-                      required
+                      className={`form-control form-control-lg ${
+                        errors.email ? 'error' : 'success'
+                      }`}
+                      id="email"
+                      placeholder="Chivo@gmail.com"
+                      aria-label="Chivo@gmail.com"
                       data-msg="Please enter a valid email address."
+                      {...register('email')}
                     />
+                    {errors.email && (
+                      <Error error={errors.email.message?.toString()} />
+                    )}
                   </div>
                   {/* End Form Group */}
 
@@ -94,47 +136,80 @@ const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
                     >
                       <span className="d-flex justify-content-between align-items-center">
                         Password
-                        <a
-                          className="input-label-secondary"
-                          href="authentication-reset-password-basic.html"
-                        >
-                          Forgot Password?
-                        </a>
                       </span>
                     </label>
 
                     <div className="input-group input-group-merge">
                       <input
                         type="password"
-                        className="js-toggle-password form-control form-control-lg"
-                        name="password"
-                        id="signupSrPassword"
-                        placeholder="8+ characters required"
-                        aria-label="8+ characters required"
-                        required
-                        data-msg="Your password is invalid. Please try again."
-                        data-hs-toggle-password-options='{
-                                 "target": "#changePassTarget",
-                                 "defaultClass": "tio-hidden-outlined",
-                                 "showClass": "tio-visible-outlined",
-                                 "classChangeTarget": "#changePassIcon"
-                               }'
+                        className={`form-control form-control-lg ${
+                          errors.password ? 'error' : 'success'
+                        }`}
+                        id="signinSrpassword"
+                        placeholder="******"
+                        aria-label="******"
+                        data-msg="Please enter a valid password address."
+                        {...register('password')}
                       />
+                      {errors.password && (
+                        <Error error={errors.password.message?.toString()} />
+                      )}
                       <div id="changePassTarget" className="input-group-append">
                         <a className="input-group-text">
-                          <i
-                            id="changePassIcon"
-                            className="tio-visible-outlined"
-                          ></i>
+                          <IonIcon className="close" icon={eye} />
                         </a>
                       </div>
                     </div>
                   </div>
+                  <div className="js-form-message form-group">
+                    <label
+                      className="input-label"
+                      htmlFor="signupSrPassword"
+                      tabIndex={0}
+                    >
+                      <span className="d-flex justify-content-between align-items-center">
+                        Xác nhận mật khẩu
+                      </span>
+                    </label>
 
+                    <div className="input-group input-group-merge">
+                      <input
+                        type="password"
+                        className={`form-control form-control-lg ${
+                          errors.confirmPassword ? 'error' : 'success'
+                        }`}
+                        id="signinSrconfirmPassword"
+                        placeholder="******"
+                        aria-label="******"
+                        data-msg="Please enter a valid confirmPassword address."
+                        {...register('confirmPassword')}
+                      />
+                      {errors.confirmPassword && (
+                        <Error
+                          error={errors.confirmPassword.message?.toString()}
+                        />
+                      )}
+                      <div id="changePassTarget" className="input-group-append">
+                        <a className="input-group-text">
+                          <IonIcon className="close" icon={eye} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Avatar
+                    <VisuallyHiddenInput type="file" />
+                  </Button>
                   {/* End Form Group */}
 
                   {/* Checkbox */}
-                  <div className="form-group">
+                  <div className="form-group d-flex justify-content-between">
                     <div className="custom-control custom-checkbox">
                       <input
                         type="checkbox"
@@ -142,6 +217,7 @@ const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
                         id="termsCheckbox"
                         name="termsCheckbox"
                       />
+
                       <label
                         className="custom-control-label text-muted"
                         htmlFor="termsCheckbox"
@@ -149,7 +225,9 @@ const Register: React.FC<RegisterProps> = ({ handleShowLoginForm }) => {
                         Remember me
                       </label>
                     </div>
-                    <button onClick={handleShowLoginForm}>Quay trở lại</button>
+                    <button onClick={onSwitchToLogin} className="item-right">
+                      Quay trở lại
+                    </button>
                   </div>
                   {/* End Checkbox */}
 

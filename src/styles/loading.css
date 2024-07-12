@@ -1,0 +1,37 @@
+.loading-wrapper {
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+}
+.loading {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #ff7f3e;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  animation: animation 1s ease-in-out infinite;
+}
+.set_1 {
+  animation-delay: 0s;
+}
+.set_2 {
+  animation-delay: 0.25s;
+}
+.set_3 {
+  animation-delay: 0.5s;
+}
+@keyframes animation {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.5);
+  }
+}
