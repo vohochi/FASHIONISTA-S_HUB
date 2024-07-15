@@ -87,7 +87,7 @@ const Detail: React.FC = () => {
                                 type="text"
                                 name="quant[2]"
                                 className="form-control text-center"
-                                defaultValue="0"
+                                defaultValue="1"
                                 min="1"
                                 max="10"
                               />

@@ -69,7 +69,12 @@ const Products: React.FC = () => {
       <div className="navigation">
         <span className="separator">Trang Chủ</span>
         <span className="separator">/</span>
-        <span className="separator">Sản phẩm</span>
+        <span
+          style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+          className="separator"
+        >
+          Sản phẩm
+        </span>
       </div>
       <div className="product-container">
         <div className="container">
@@ -100,7 +105,7 @@ const Products: React.FC = () => {
                       >
                         <div className="menu-title-flex">
                           <img
-                            src={`../../public/icons/${item.image}`}
+                            src={`../icons/${item.image}`}
                             alt="clothes"
                             width="20"
                             height="20"
@@ -180,7 +185,7 @@ const Products: React.FC = () => {
             </div>
 
             <div className="product-showcase">
-              <h3 className="showcase-heading">Giảm Giá !!!</h3>
+              <h3 className="showcase-heading">Giảm Giá khung giờ vàng !!!</h3>
 
               {productsHotLoading ? (
                 <Loading />
@@ -191,7 +196,7 @@ const Products: React.FC = () => {
                       <div key={key} className="showcase">
                         <a href="#" className="showcase-img-box">
                           <img
-                            src={`../../public/images/products/${item.image}`}
+                            src={`../images/products/${item.image}`}
                             alt="baby fabric shoes"
                             width="75"
                             height="75"
@@ -262,18 +267,17 @@ const Products: React.FC = () => {
                         onClick={() => handleDetailProduct(item._id)}
                       >
                         <img
-                          src={`../../public/images/products/${item.image}`}
+                          src={`../images/products/${item.image}`}
                           alt="Mens Winter Leathers Jackets"
                           width="300"
                           className="product-img default"
                         />
                         <img
-                          src={`../../public/images/products/${item.image}`}
+                          src={`../images/products/${item.image}`}
                           alt="Mens Winter Leathers Jackets"
                           width="300"
                           className="product-img hover"
                         />
-                        <p className="showcase-badge">15%</p>
                         <div className="showcase-actions">
                           <button className="btn-action">
                             <IonIcon icon={heartOutline} />

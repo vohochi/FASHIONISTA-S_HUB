@@ -2917,3 +2917,6 @@ footer {
     max-width: 460px;
   }
 }
+.sidebar-menu-category:hover {
+  background-color: hsl(354, 100%, 95%);
+}

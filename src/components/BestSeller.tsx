@@ -23,7 +23,7 @@ const BestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
   return (
     <>
       <div className="product-showcase">
-        <h3 className="showcase-heading">Sản phẩm đang sale</h3>
+        <h3 className="showcase-heading">Sản phẩm mới</h3>
 
         {productsHotIsLoading ? (
           <Loading />
@@ -36,15 +36,15 @@ const BestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
                   key={item.id}
                   className="showcase showcase-top"
                 >
-                  <a href="#" className="showcase-img-box">
+                  <a className="showcase-img-box">
                     <img
-                      src={`../../public/images/products/${item.image}`}
+                      src={`../images/products/${item.image}`}
                       alt="baby fabric shoes"
                       width="75"
                       height="75"
                       className="showcase-img"
                     />
-                    <p className="showcase-badge angle black">sale</p>
+                    <p className="showcase-badge angle pink">New</p>
                   </a>
 
                   <div className="showcase-content">
@@ -66,8 +66,8 @@ const BestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
 
                     <div className="price-box">
                       <p className="price">
-                        {Currency(item.price_sale)}
-                        <del> {Currency(item.price)}</del>
+                        {Currency(item.price)}
+                        {/* <del> {Currency(item.price)}</del> */}
                       </p>{' '}
                     </div>
                   </div>

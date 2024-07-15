@@ -33,7 +33,7 @@ const Sidebar: React.FC<Props> = ({ onCategoryChange }) => {
               <button className="sidebar-accordion-menu" data-accordion-btn>
                 <div className="menu-title-flex">
                   <img
-                    src={`../../public/icons/${item.image}`}
+                    src={`../icons/${item.image}`}
                     alt="clothes"
                     width="20"
                     height="20"
@@ -51,7 +51,7 @@ const Sidebar: React.FC<Props> = ({ onCategoryChange }) => {
 
               <ul className="sidebar-submenu-category-list" data-accordion>
                 <li className="sidebar-submenu-category">
-                  <a href="#" className="sidebar-submenu-title">
+                  <a className="sidebar-submenu-title">
                     <p className="product-name">Shirt</p>
                     <data value="300" className="stock" title="Available Stock">
                       300
@@ -60,7 +60,7 @@ const Sidebar: React.FC<Props> = ({ onCategoryChange }) => {
                 </li>
 
                 <li className="sidebar-submenu-category">
-                  <a href="#" className="sidebar-submenu-title">
+                  <a className="sidebar-submenu-title">
                     <p className="product-name">shorts & jeans</p>
                     <data value="60" className="stock" title="Available Stock">
                       60
@@ -69,7 +69,7 @@ const Sidebar: React.FC<Props> = ({ onCategoryChange }) => {
                 </li>
 
                 <li className="sidebar-submenu-category">
-                  <a href="#" className="sidebar-submenu-title">
+                  <a className="sidebar-submenu-title">
                     <p className="product-name">jacket</p>
                     <data value="50" className="stock" title="Available Stock">
                       50
@@ -78,7 +78,7 @@ const Sidebar: React.FC<Props> = ({ onCategoryChange }) => {
                 </li>
 
                 <li className="sidebar-submenu-category">
-                  <a href="#" className="sidebar-submenu-title">
+                  <a className="sidebar-submenu-title">
                     <p className="product-name">dress & frock</p>
                     <data value="87" className="stock" title="Available Stock">
                       87

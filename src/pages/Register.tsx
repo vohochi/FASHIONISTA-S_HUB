@@ -28,10 +28,12 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useFormContext();
 
   const onSubmit = () => {
-    console.log('submit');
+    const formData = watch();
+    console.log('formData:', formData);
   };
 
   return (
@@ -61,13 +63,13 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                       </span>
                     </a>
 
-                    <span className="divider text-muted mb-4">OR</span>
+                    <span className="divider text-muted mb-4">Hoặc</span>
                   </div>
 
                   {/* Form Group */}
                   <div className="js-form-message form-group">
                     <label className="input-label" htmlFor="fullNameSrEmail">
-                      Name
+                      Họ & Tên
                     </label>
                     <div className="form-row">
                       <div className="col-sm-6">
@@ -135,7 +137,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                       tabIndex={0}
                     >
                       <span className="d-flex justify-content-between align-items-center">
-                        Password
+                        Mật khẩu
                       </span>
                     </label>
 
@@ -222,7 +224,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                         className="custom-control-label text-muted"
                         htmlFor="termsCheckbox"
                       >
-                        Remember me
+                        Ghi Nhớ
                       </label>
                     </div>
                     <button onClick={onSwitchToLogin} className="item-right">
@@ -245,7 +247,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
             {/* Footer */}
             <div className="text-center">
               <small className="text-cap mb-4">
-                Trusted by the world's best teams
+                Được tin tưởng bởi các đội tốt nhất thế giới
               </small>
 
               <div className="w-85 mx-auto">

@@ -14,11 +14,15 @@ import {
   logoLinkedin,
 } from 'ionicons/icons';
 import UserProvider from '../context/UserContext';
+import { useFetch } from '../hooks/UseReducer';
 
 const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
 const HeaderTop: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  // router navigate
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleShowLoginModal = () => {
     setShowLoginModal(true);
@@ -28,11 +32,25 @@ const HeaderTop: React.FC = () => {
     setShowLoginModal(false);
   };
 
-  // router navigate
-  const navigate = useNavigate();
   const handleNavigate = (path: string) => {
     navigate(path);
   };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const { data: products, error: productsError } = useFetch(
+    `/products/search/${searchTerm}`
+  );
+
+  console.log(products);
+  const errors = [productsError];
+
+  if (errors.some((error) => error)) {
+    console.error('Có lỗi xảy ra khi lấy dữ liệu');
+  }
+
   return (
     <header>
       <div className="header-top">
@@ -88,7 +106,24 @@ const HeaderTop: React.FC = () => {
               name="search"
               className="search-field"
               placeholder="Enter your product name..."
+              value={searchTerm}
+              onChange={handleSearch}
             />
+            {/* <ul className="suggestions">
+              {products.map((suggestion) => (
+                <li
+                  key={suggestion}
+                  style={{
+                    backgroundColor: 'lightgray',
+                    padding: '5px',
+                    cursor: 'pointer',
+                  }}
+                  // onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul> */}
             <button className="search-btn">
               <IonIcon icon={searchOutline} />
             </button>
@@ -114,7 +149,10 @@ const HeaderTop: React.FC = () => {
               <IonIcon icon={heartOutline} />
               <span className="count">0</span>
             </button>
-            <button className="action-btn">
+            <button
+              className="action-btn"
+              onClick={() => handleNavigate('/cart')}
+            >
               <IonIcon icon={bagHandleOutline} />
               <span className="count">0</span>
             </button>
@@ -126,32 +164,36 @@ const HeaderTop: React.FC = () => {
           <ul className="desktop-menu-category-list">
             <li className="menu-category" onClick={() => handleNavigate('/')}>
               <a href="#" className="menu-title">
-                Home
+                Trang chủ
               </a>
             </li>
-
             <li
               className="menu-category"
               onClick={() => handleNavigate('/Products')}
             >
               <a href="#" className="menu-title">
-                Products
+                Sản phẩm
               </a>
-            </li>
-
-            <li
-              className="menu-category"
-              onClick={() => handleNavigate('/cart')}
-            >
-              <a className="menu-title">Cart</a>
-            </li>
-
+            </li>{' '}
             <li
               className="menu-category"
               onClick={() => handleNavigate('/checkOut')}
             >
               <a href="#" className="menu-title">
-                Checkout
+                Hệ thống cửa hàng
+              </a>
+            </li>
+            <li
+              className="menu-category"
+              onClick={() => handleNavigate('/checkOut')}
+            >
+              <a href="#" className="menu-title">
+                Thanh toán
+              </a>
+            </li>
+            <li className="menu-category">
+              <a href="#" className="menu-title">
+                Blog
               </a>
             </li>
             <li

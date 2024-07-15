@@ -3,21 +3,21 @@ import React, { useState, useEffect } from 'react';
 const Banner: React.FC = () => {
   const sliderItems = [
     {
-      imageSrc: '../../public/banner-1.jpg',
+      imageSrc: '../banner-1.jpg',
       imageAlt: 'Bán thời trang mới nhất của phụ nữ',
       subtitle: 'Mục xu hướng',
       title: 'Bán thời trang mới nhất của phụ nữ',
       price: 150.0,
     },
     {
-      imageSrc: '../../public/banner-2.jpg',
+      imageSrc: '../banner-2.jpg',
       imageAlt: 'Kính râm hiện đại',
       subtitle: 'Phụ kiện xu hướng',
       title: 'Kính râm hiện đại',
       price: 200.0,
     },
     {
-      imageSrc: '../../public/banner-3.jpg',
+      imageSrc: '../banner-3.jpg',
       imageAlt: 'Bán mùa hè thời trang mới',
       subtitle: 'Ưu đãi bán hàng',
       title: 'Bán mùa hè thời trang mới',

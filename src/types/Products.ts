@@ -8,7 +8,10 @@ interface ProductItem {
   image_hover: string;
   description: string;
   category: string;
+  isNewDiscounted: boolean;
+  saleDecrease: true;
   size: Array<string>;
+  quantity: number;
 }
 
 export default ProductItem;

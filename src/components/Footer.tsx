@@ -204,13 +204,10 @@ const Footer: React.FC = () => {
       <div className="footer-bottom">
         <div className="container">
           <img
-            src="./assets/images/payment.png"
+            src="../images/payment.png"
             alt="payment method"
             className="payment-img"
           />
-          <p className="copyright">
-            Copyright &copy; <a href="#">Anon</a> all rights reserved.
-          </p>
         </div>
       </div>
     </footer>

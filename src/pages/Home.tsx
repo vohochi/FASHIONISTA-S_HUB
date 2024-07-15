@@ -24,11 +24,17 @@ import Categories from '../components/Categories';
 import Sidebar from '../components/Sidebar';
 import ProductBestSeller from '../components/ProductBestSeller';
 import BestSeller from '../components/BestSeller';
+import { useDispatch } from 'react-redux';
+import { addItem } from '../store/slice/cart';
 
 const Home: React.FC = () => {
   const productMainRef = useRef(null);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleAddItem = (item) => {
+    dispatch(addItem(item));
+  };
   // show chi tiet san pham
   const handleDetailProduct = (productID: string) => {
     navigate(`/product/${productID}`);
@@ -47,9 +53,7 @@ const Home: React.FC = () => {
   if (errors.some((error) => error)) {
     console.error('Có lỗi xảy ra khi lấy dữ liệu');
   }
-  // useState categories
-  // const [filteredProducts, setFilteredProducts] = useState(products);
-  // thay đổi danh mục
+  // thay doi danh muc
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     // cuộn xuống sản phẩm
@@ -83,30 +87,33 @@ const Home: React.FC = () => {
               <ProductBestSeller handleDetailProduct={handleDetailProduct} />
             </div>
             <div ref={productMainRef} className="product-main">
-              <h2 className="title">Sản phẩm mới</h2>
+              <h2 className="title">Sản phẩm nổi bật</h2>
               {productsIsLoading ? (
                 <Loading />
               ) : (
                 <div className="product-grid">
                   {products.map((item: ProductItem, key: number) => (
                     <div className="showcase" key={key}>
-                      <div
-                        className="showcase-banner"
-                        onClick={() => handleDetailProduct(item._id)}
-                      >
+                      <div className="showcase-banner">
                         <img
-                          src={`../../public/images/products/${item.image}`}
+                          src={`../images/products/${item.image}`}
                           alt="Mens Winter Leathers Jackets"
                           width="300"
                           className="product-img default"
                         />
                         <img
-                          src={`../../public/images/products/${item.image}`}
+                          src={`../images/products/${item.image}`}
                           alt="Mens Winter Leathers Jackets"
                           width="300"
                           className="product-img hover"
+                          onClick={() => handleDetailProduct(item._id)}
                         />
-                        <p className="showcase-badge">15%</p>
+                        {item.isNewDiscounted && (
+                          <p className="showcase-badge angle black">sale</p>
+                        )}{' '}
+                        {item.saleDecrease && (
+                          <p className="showcase-badge">15%</p>
+                        )}
                         <div className="showcase-actions">
                           <button className="btn-action">
                             <IonIcon icon={heartOutline} />
@@ -117,7 +124,10 @@ const Home: React.FC = () => {
                           <button className="btn-action">
                             <IonIcon icon={repeatOutline} />
                           </button>
-                          <button className="btn-action">
+                          <button
+                            onClick={() => handleAddItem(item)}
+                            className="btn-action"
+                          >
                             <IonIcon icon={bagAddOutline} />
                           </button>
                         </div>
@@ -139,7 +149,12 @@ const Home: React.FC = () => {
                         </div>
                         <div className="price-box">
                           <p className="price">{Currency(item.price)}</p>{' '}
-                          {/* <del>$75.00</del> */}
+                          {item.isNewDiscounted && (
+                            <del>{Currency(item.price_sale)}</del>
+                          )}
+                          {item.saleDecrease && (
+                            <del>{Currency(item.price_sale)}</del>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -156,7 +171,7 @@ const Home: React.FC = () => {
 
               <div className="testimonial-card">
                 <img
-                  src="../../public/nhasanglap.jpg"
+                  src="./nhasanglap.jpg"
                   alt="alan doe"
                   className="testimonial-banner"
                   width="80"
@@ -168,7 +183,7 @@ const Home: React.FC = () => {
                 <p className="testimonial-title">Người sáng lập</p>
 
                 <img
-                  src="./../public/images/icons/quotes.svg"
+                  src="../images/icons/quotes.svg"
                   alt="quotation"
                   className="quotation-img"
                   width="26"
@@ -182,7 +197,7 @@ const Home: React.FC = () => {
 
             <div className="cta-container">
               <img
-                src="./../public/images/cta-banner.jpg"
+                src="../images/cta-banner.jpg"
                 alt="summer collection"
                 className="cta-banner"
               />

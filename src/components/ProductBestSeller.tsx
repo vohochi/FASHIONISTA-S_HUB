@@ -49,7 +49,7 @@ const ProductBestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
                 >
                   <a href="#" className="showcase-img-box">
                     <img
-                      src={`../../public/images/products/${item.image}`}
+                      src={`../images/products/${item.image}`}
                       alt={item.name}
                       width="70"
                       className="showcase-img"
@@ -62,7 +62,7 @@ const ProductBestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
                     </a>
 
                     <a href="#" className="showcase-category">
-                      Clothes
+                      {item.category}
                     </a>
 
                     <div className="price-box">
@@ -90,7 +90,7 @@ const ProductBestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
                 >
                   <a href="#" className="showcase-img-box">
                     <img
-                      src={`../../public/images/products/${item.image}`}
+                      src={`../images/products/${item.image}`}
                       alt={item.name}
                       className="showcase-img"
                       width="70"
@@ -131,7 +131,7 @@ const ProductBestSeller: React.FC<Props> = ({ handleDetailProduct }) => {
                 >
                   <a href="#" className="showcase-img-box">
                     <img
-                      src={`../../public/images/products/${item.image}`}
+                      src={`../images/products/${item.image}`}
                       alt={item.name}
                       className="showcase-img"
                       width="70"

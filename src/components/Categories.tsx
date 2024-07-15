@@ -34,7 +34,7 @@ const Categories: React.FC<Props> = ({ onCategoryChange }) => {
                 >
                   <div className="category-img-box">
                     <img
-                      src={`../../public/icons/${item.image}`}
+                      src={`../icons/${item.image}`}
                       alt={item.name}
                       width="30"
                     />
@@ -46,9 +46,7 @@ const Categories: React.FC<Props> = ({ onCategoryChange }) => {
                       <p className="category-item-amount">({item.quantity})</p>
                     </div>
 
-                    <a href="#" className="category-btn">
-                      Show all
-                    </a>
+                    <a className="category-btn">Show all</a>
                   </div>
                 </div>
               ))}
