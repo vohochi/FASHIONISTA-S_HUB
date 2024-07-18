@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { IonIcon } from '@ionic/react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import Switch from '@mui/material/Switch';
 import {
@@ -14,18 +15,21 @@ import {
   logoLinkedin,
 } from 'ionicons/icons';
 import UserProvider from '../context/UserContext';
-import { useFetch } from '../hooks/UseReducer';
-
+import { selectCartItems } from '../store/slice/cart';
+import { LoginModalContext } from '../context/LoginContext';
+import BadgeAvatars from './Avatar';
 const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
 const HeaderTop: React.FC = () => {
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  // router navigate
+  const { showLoginModal, setShowLoginModal } = useContext(LoginModalContext);
+
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const count = useSelector(selectCartItems).length;
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const handleShowLoginModal = () => {
     setShowLoginModal(true);
+    // navigate('/login');
   };
 
   const handleCloseLoginModal = () => {
@@ -36,20 +40,20 @@ const HeaderTop: React.FC = () => {
     navigate(path);
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(event.target.value);
+  // };
 
-  const { data: products, error: productsError } = useFetch(
-    `/products/search/${searchTerm}`
-  );
+  // const { data: products, error: productsError } = useFetch(
+  //   `products/search/${searchTerm}`
+  // );
 
-  console.log(products);
-  const errors = [productsError];
+  // console.log(products);
+  // const errors = [productsError];
 
-  if (errors.some((error) => error)) {
-    console.error('Có lỗi xảy ra khi lấy dữ liệu');
-  }
+  // if (errors.some((error) => error)) {
+  //   console.error('Có lỗi xảy ra khi lấy dữ liệu');
+  // }
 
   return (
     <header>
@@ -105,9 +109,9 @@ const HeaderTop: React.FC = () => {
               type="search"
               name="search"
               className="search-field"
-              placeholder="Enter your product name..."
-              value={searchTerm}
-              onChange={handleSearch}
+              placeholder="Nhập tên sản phẩm của bạn..."
+              // value={searchTerm}
+              // onChange={handleSearch}
             />
             {/* <ul className="suggestions">
               {products.map((suggestion) => (
@@ -131,7 +135,6 @@ const HeaderTop: React.FC = () => {
 
           <div className="header-user-actions">
             <button onClick={handleShowLoginModal} className="action-btn">
-              {/* <BadgeAvatars /> */}
               <Modal
                 show={showLoginModal}
                 onHide={handleCloseLoginModal}
@@ -142,8 +145,11 @@ const HeaderTop: React.FC = () => {
                   <UserProvider />
                 </div>
               </Modal>
-
-              <IonIcon icon={personOutline} />
+              {isLoggedIn == true ? (
+                <IonIcon icon={personOutline} />
+              ) : (
+                <BadgeAvatars />
+              )}
             </button>
             <button className="action-btn">
               <IonIcon icon={heartOutline} />
@@ -154,7 +160,7 @@ const HeaderTop: React.FC = () => {
               onClick={() => handleNavigate('/cart')}
             >
               <IonIcon icon={bagHandleOutline} />
-              <span className="count">0</span>
+              <span className="count">{count}</span>
             </button>
           </div>
         </div>

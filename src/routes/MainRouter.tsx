@@ -9,7 +9,9 @@ import '../styles/style-prefix.css';
 const MainLayout: React.FC = () => (
   <>
     <Header />
+
     <Outlet />
+
     <Footer />
   </>
 );

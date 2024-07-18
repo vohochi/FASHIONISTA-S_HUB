@@ -21,13 +21,17 @@ import {
 import { addOutline, removeOutline, trashOutline } from 'ionicons/icons';
 import Success from '../components/Success';
 import Error from '../components/Error';
+import { useNavigate } from 'react-router-dom';
 
 const Cart: React.FC = () => {
   // Lấy thông tin bên handleAddItem
   const cartItems = useSelector(selectCartItems);
   const totalCart = useSelector(selectCartTotal);
-  const dispatch = useDispatch();
   const shippingFee = useSelector(selectShippingFee);
+
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+
   const [discountCode, setDiscountCodes] = useState<string | null>(null);
 
   const count = cartItems.length;
@@ -57,6 +61,10 @@ const Cart: React.FC = () => {
     const code = event.target.value;
     setDiscountCodes(code);
     dispatch(setDiscountCode(code));
+  };
+
+  const handleCheckOut = () => {
+    navigation('/checkout');
   };
 
   return (
@@ -200,9 +208,11 @@ const Cart: React.FC = () => {
                             value={discountCode || ''}
                             onChange={handleSetDiscountCode}
                           />
-                          <Success message="Mã giảm giá của bạn hợp lệ" />{' '}
-                          <Error error="Mã giảm giá của bạn không hợp lệ" />
+                          {discountCode && (
+                            <Success message="Mã giảm giá của bạn hợp lệ" />
+                          )}{' '}
                         </div>
+                        <Error error="Mã giảm giá của bạn không hợp lệ" />
                       </div>
 
                       <hr className="my-4" />
@@ -218,6 +228,7 @@ const Cart: React.FC = () => {
                         data-mdb-ripple-init
                         className="btn btn-dark btn-block btn-lg"
                         data-mdb-ripple-color="dark"
+                        onClick={handleCheckOut}
                       >
                         Thanh toán
                       </button>

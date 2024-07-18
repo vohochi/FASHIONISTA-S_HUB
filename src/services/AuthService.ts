@@ -1,19 +1,17 @@
-const registerUser = async (userData: {
-  name: string;
+const http = 'http://127.0.0.1:3000/api';
+export const registerUser = async (userData: {
+  fullName: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  password2: string;
 }) => {
   try {
-    const formData = new FormData();
-    formData.append('name', userData.name);
-    formData.append('email', userData.email);
-    formData.append('password', userData.password);
-    formData.append('confirmPassword', userData.confirmPassword);
-
-    const response = await fetch('/api/register', {
+    const response = await fetch(`${http}/users/register`, {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
     });
 
     if (response.ok) {
@@ -29,4 +27,44 @@ const registerUser = async (userData: {
   }
 };
 
-export default { registerUser };
+export const loginUser = async (userData: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const response = await fetch(`${http}/users/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return { ok: true, data };
+    } else {
+      const error = await response.json();
+      return { ok: false, error };
+    }
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};
+export const getAllUsers = async () => {
+  try {
+    const response = await fetch(`${http}/users`);
+
+    if (response.ok) {
+      const data = await response.json();
+      return { ok: true, data };
+    } else {
+      const error = await response.json();
+      return { ok: false, error };
+    }
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};

@@ -261,7 +261,7 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
   z-index: 10;
   -webkit-animation: popup 1s ease-in-out 5s forwards;
-  animation: popup 1s ease-in-out 5s forwards;
+  animation: popup 0.5s ease-in-out forwards;
 }
 
 @-webkit-keyframes popup {

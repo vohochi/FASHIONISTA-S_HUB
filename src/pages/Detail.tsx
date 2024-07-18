@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { star, starOutline, heart } from 'ionicons/icons';
 import { useFetch } from '../hooks/UseReducer';
@@ -6,9 +6,37 @@ import Error from '../utils/Error';
 import Loading from '../components/Loading';
 import { Currency } from '../utils/Currency';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addItem } from '../store/slice/cart';
 
 const Detail: React.FC = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const [countHandle, setCountHandle] = useState(1);
+
+  // giảm số lượng
+  const handleIncrease = () => {
+    setCountHandle((prevCount) => prevCount + 1);
+    console.log('+');
+  };
+  // tăng số lượng
+  const handleDecrease = () => {
+    setCountHandle((prevCount) => prevCount - 1);
+  };
+
+  // thay đổi số lượng
+  const handleQuantityChange = (event) => {
+    const newQuantity = parseInt(event.target.value);
+    setCountHandle(newQuantity);
+  };
+
+  const handleAddItem = (item) => {
+    const itemToAdd = { ...item, quantity: countHandle };
+    console.log(itemToAdd);
+    dispatch(addItem(itemToAdd));
+    alert('Thêm sản phẩm vào giỏ hàng thành công');
+  };
+
   const {
     data: product,
     isLoading: productLoading,
@@ -38,7 +66,7 @@ const Detail: React.FC = () => {
                 <div className="showcase">
                   <div className="showcase-banner">
                     <img
-                      src={`../../public/images/products/${product.image}`}
+                      src={`../images/products/${product.image}`}
                       alt="shampoo, conditioner & facewash packs"
                       className="showcase-img"
                     />
@@ -65,7 +93,12 @@ const Detail: React.FC = () => {
 
                     {/* <label htmlFor=""></label> */}
                     <div className="input-group formInput">
-                      <button className="add-cart-btn">add to cart</button>
+                      <button
+                        className="add-cart-btn"
+                        onClick={() => handleAddItem(product)}
+                      >
+                        add to cart
+                      </button>
                       <span className="mx-2"></span>{' '}
                       <button className="add-cart-btn">
                         <IonIcon icon={heart} />
@@ -79,6 +112,7 @@ const Detail: React.FC = () => {
                                 type="button"
                                 data-type="minus"
                                 data-field="quant[2]"
+                                onClick={handleDecrease}
                               >
                                 -
                               </button>
@@ -87,15 +121,17 @@ const Detail: React.FC = () => {
                                 type="text"
                                 name="quant[2]"
                                 className="form-control text-center"
-                                defaultValue="1"
                                 min="1"
                                 max="10"
+                                value={countHandle}
+                                onChange={handleQuantityChange}
                               />
                               <button
                                 className="btn btn-outline-secondary btn-plus"
                                 type="button"
                                 data-type="plus"
                                 data-field="quant[2]"
+                                onClick={handleIncrease}
                               >
                                 +
                               </button>

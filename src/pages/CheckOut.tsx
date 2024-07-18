@@ -1,10 +1,18 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectCartItems, selectCartTotal } from '../store/slice/cart';
+import { Currency } from '../utils/Currency';
 
 interface Props {
   // define your props here
 }
 
 const CheckOut: React.FC<Props> = () => {
+  const totalCart = useSelector(selectCartTotal);
+  const cartItems = useSelector(selectCartItems);
+
+  const { fullName, email } = JSON.parse(localStorage.getItem('loginData'));
+
   return (
     <div className="container">
       <div className="row">
@@ -31,13 +39,15 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-label"
                                     htmlFor="billing-name"
                                   >
-                                    Name
+                                    Họ & Tên
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
                                     id="billing-name"
-                                    placeholder="Enter name"
+                                    placeholder="Nhập tên"
+                                    value={fullName}
+                                    disabled
                                   />
                                 </div>
                               </div>
@@ -47,13 +57,15 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-label"
                                     htmlFor="billing-email-address"
                                   >
-                                    Email Address
+                                    Email
                                   </label>
                                   <input
                                     type="email"
                                     className="form-control"
                                     id="billing-email-address"
-                                    placeholder="Enter email"
+                                    placeholder="Nhập Email"
+                                    value={email}
+                                    disabled
                                   />
                                 </div>
                               </div>
@@ -63,13 +75,13 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-label"
                                     htmlFor="billing-phone"
                                   >
-                                    Phone
+                                    Số điện thoại
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
                                     id="billing-phone"
-                                    placeholder="Enter Phone no."
+                                    placeholder="Nhập số điện thoại"
                                   />
                                 </div>
                               </div>
@@ -80,32 +92,28 @@ const CheckOut: React.FC<Props> = () => {
                                 className="form-label"
                                 htmlFor="billing-address"
                               >
-                                Address
+                                Địa chỉ(Nhận hàng)
                               </label>
                               <textarea
                                 className="form-control"
                                 id="billing-address"
                                 // rows="3"
-                                placeholder="Enter full address"
+                                placeholder="Địa chỉ nhận hàng"
                               ></textarea>
                             </div>
 
                             <div className="row">
                               <div className="col-lg-4">
                                 <div className="mb-4 mb-lg-0">
-                                  <label className="form-label">Country</label>
+                                  <label className="form-label">
+                                    Thành phố
+                                  </label>
                                   <select
                                     className="form-control form-select"
-                                    title="Country"
+                                    title="city"
                                   >
                                     <option value="0">Select Country</option>
                                     <option value="AF">Afghanistan</option>
-                                    <option value="AL">Albania</option>
-                                    <option value="DZ">Algeria</option>
-                                    <option value="AS">American Samoa</option>
-                                    <option value="AD">Andorra</option>
-                                    <option value="AO">Angola</option>
-                                    <option value="AI">Anguilla</option>
                                   </select>
                                 </div>
                               </div>
@@ -116,13 +124,13 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-label"
                                     htmlFor="billing-city"
                                   >
-                                    City
+                                    Quận/ Huyện
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
                                     id="billing-city"
-                                    placeholder="Enter City"
+                                    placeholder="Chọn quận/ huyện"
                                   />
                                 </div>
                               </div>
@@ -133,13 +141,13 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-label"
                                     htmlFor="zip-code"
                                   >
-                                    Zip / Postal code
+                                    Phường/ Xã
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
                                     id="zip-code"
-                                    placeholder="Enter Postal code"
+                                    placeholder="Chọn phường/ xã"
                                   />
                                 </div>
                               </div>
@@ -161,13 +169,13 @@ const CheckOut: React.FC<Props> = () => {
                 href="ecommerce-products.html"
                 className="btn btn-link text-muted"
               >
-                <i className="mdi mdi-arrow-left me-1"></i> Continue Shopping
+                <i className="mdi mdi-arrow-left me-1"></i> Tiếp tục mua sắm
               </a>
             </div>
             <div className="col">
               <div className="text-end mt-2 mt-sm-0">
                 <a href="#" className="btn btn-success">
-                  <i className="mdi mdi-cart-outline me-1"></i> Procced
+                  <i className="mdi mdi-cart-outline me-1"></i> Thanh toán
                 </a>
               </div>
             </div>
@@ -178,7 +186,8 @@ const CheckOut: React.FC<Props> = () => {
             <div className="card-body">
               <div className="p-3 bg-light mb-3">
                 <h5 className="font-size-16 mb-0">
-                  Order Summary <span className="float-end ms-2">#MN0124</span>
+                  Tổng tiền{' '}
+                  <span className="float-end ms-2">{Currency(totalCart)}</span>
                 </h5>
               </div>
               <div className="table-responsive">
@@ -190,17 +199,31 @@ const CheckOut: React.FC<Props> = () => {
                         style={{ width: '110px' }}
                         scope="col"
                       >
-                        Product
+                        Sản phẩm
                       </th>
                       <th className="border-top-0" scope="col">
-                        Product Desc
+                        Số lượng
                       </th>
                       <th className="border-top-0" scope="col">
-                        Price
+                        Giá
                       </th>
                     </tr>
                   </thead>
-                  <tbody>{/* Table rows would go here */}</tbody>
+                  <tbody>
+                    {cartItems.map((item, key) => (
+                      <tr key={key}>
+                        <td>
+                          <img
+                            src={`../images/products/${item.image}`}
+                            style={{ width: '30%' }}
+                          />{' '}
+                          {item.name}
+                        </td>
+                        <td>{item.quantity}</td>
+                        <td>{Currency(item.price)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             </div>

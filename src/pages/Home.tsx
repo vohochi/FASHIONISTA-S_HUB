@@ -26,6 +26,7 @@ import ProductBestSeller from '../components/ProductBestSeller';
 import BestSeller from '../components/BestSeller';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/slice/cart';
+// import Message from '../components/Message';
 
 const Home: React.FC = () => {
   const productMainRef = useRef(null);
@@ -33,7 +34,10 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const handleAddItem = (item) => {
+    console.log(item);
     dispatch(addItem(item));
+    // <Message />;
+    alert('Thêm sản phẩm vào giỏ hàng thành công');
   };
   // show chi tiet san pham
   const handleDetailProduct = (productID: string) => {

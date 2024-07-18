@@ -35,7 +35,11 @@ const UserProvider: React.FC<Props> = () => {
     <>
       {formType === 'login' && (
         <FormProvider {...loginMethods}>
-          <LogIn onSwitchToRegister={() => switchForm('register')} />
+          <LogIn
+            onSwitchToRegister={() => {
+              switchForm('register');
+            }}
+          />
         </FormProvider>
       )}
       {formType === 'register' && (

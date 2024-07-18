@@ -22,16 +22,17 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action: PayloadAction<ProductItem>) => {
       const newItem = action.payload;
-      // Kiểm tra _id có tồn tại chưa
-      const existingItem = state.cartItems.find(
+      const existingItemIndex = state.cartItems.findIndex(
         (item) => item._id === newItem._id
       );
-      if (existingItem) {
-        existingItem.quantity += 1;
+
+      if (existingItemIndex !== -1) {
+        state.cartItems[existingItemIndex].quantity += newItem.quantity;
       } else {
-        newItem.quantity = 1;
+        newItem.quantity = newItem.quantity || 1;
         state.cartItems.push(newItem);
       }
+
       localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
     },
     // Tăng số lượng

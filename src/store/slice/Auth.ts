@@ -1,126 +1,69 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import AuthService from '../../services/AuthService';
+// authSlice.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-interface AuthState {
-  user: {
-    id: string | null;
-    email: string | null;
-    // ... other user properties
-  } | null;
-  token: string | null;
-  isLoggedIn: boolean;
-  error: string | null;
-}
+import { loginUser, registerUser } from '../../services/AuthService';
 
-const initialState: AuthState = {
-  user: null,
-  token: null,
-  isLoggedIn: false,
-  error: null,
-};
+export const login = createAsyncThunk(
+  'api/login',
+  async (credentials: { email: string; password: string }) => {
+    const response = await loginUser(credentials);
+    const loginData = {
+      imageUrl: response.data.user.image,
+      fullName: response.data.user.username,
+      email: response.data.user.email,
+      accessToken: response.data.accessToken,
+    };
 
-// Action bất đồng bộ cho đăng ký
-export const registerUser = createAsyncThunk(
-  'auth/registerUser',
+    // Lưu đối tượng loginData vào localStorage
+    localStorage.setItem('loginData', JSON.stringify(loginData));
+    return response.data;
+  }
+);
+
+export const RegisterAuth = createAsyncThunk(
+  'users/create',
   async (userData: {
-    name: string;
+    fullName: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    password2: string;
   }) => {
-    const response = await AuthService.registerUser(userData);
-    return response;
-  }
-);
+    const response = await registerUser(userData);
 
-// Action bất đồng bộ cho đăng nhập
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (userData: { email: string; password: string }) => {
-    const response = await AuthService.loginUser(userData);
-    return response;
-  }
-);
-
-// Action bất đồng bộ cho quên mật khẩu
-export const forgotPassword = createAsyncThunk(
-  'auth/forgotPassword',
-  async (email: string) => {
-    const response = await AuthService.forgotPassword(email);
-    return response;
+    return response.data;
   }
 );
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    user: null,
+    isLoggedIn: false,
+    error: null,
+  },
   reducers: {
-    logout: (state) => {
-      state.token = null;
+    logOut: (state) => {
       state.user = null;
       state.isLoggedIn = false;
       state.error = null;
-    },
-    setError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload;
+      // Xóa đối tượng loginData khỏi localStorage
+      localStorage.removeItem('loginData');
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state) => {
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.isLoggedIn = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        if (action.payload.ok) {
-          state.user = {
-            id: action.payload.data.id,
-            email: action.payload.data.email,
-          };
-          state.isLoggedIn = true;
-          state.error = null;
-        } else {
-          state.error = action.payload.error;
-        }
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        console.error('Lỗi đăng ký:', action.error);
-        state.error = 'Lỗi đăng ký';
-      })
-      .addCase(loginUser.pending, (state) => {
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        if (action.payload.ok) {
-          state.token = action.payload.data.token;
-          state.user = action.payload.data.user;
-          state.isLoggedIn = true;
-          state.error = null;
-        } else {
-          state.error = action.payload.error;
-        }
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        console.error('Lỗi đăng nhập:', action.error);
-        state.error = 'Lỗi đăng nhập';
-      })
-      .addCase(forgotPassword.pending, (state) => {
-        state.error = null;
-      })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        if (action.payload.ok) {
-          // Xử lý phản hồi thành công
-          state.error = null;
-        } else {
-          state.error = action.payload.error;
-        }
-      })
-      .addCase(forgotPassword.rejected, (state, action) => {
-        console.error('Lỗi quên mật khẩu:', action.error);
-        state.error = 'Lỗi quên mật khẩu';
+      .addCase(login.rejected, (state, action) => {
+        state.user = null;
+        state.isLoggedIn = false;
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout, setError } = authSlice.actions;
-
+export const { logOut } = authSlice.actions;
 export default authSlice.reducer;

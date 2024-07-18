@@ -17,8 +17,7 @@ export const loginSchema = z.object({
 // Schema đăng ký (mới)
 export const registerSchema = z
   .object({
-    name: z.string().min(1, { message: 'Vui lòng nhập tên' }),
-    fullName: z.string().min(1, { message: 'Vui lòng nhập họ' }),
+    fullName: z.string().min(1, { message: 'Vui lòng nhập họ & tên' }),
     email: z
       .string()
       .min(1, {
@@ -30,14 +29,12 @@ export const registerSchema = z
     password: z
       .string()
       .min(8, { message: 'Mật khẩu phải có ít nhất 8 ký tự' }),
-    confirmPassword: z
-      .string()
-      .min(1, { message: 'Vui lòng xác nhận mật khẩu' }),
+    password2: z.string().min(1, { message: 'Vui lòng xác nhận mật khẩu' }),
     imgUrl: z.string().url({ message: 'URL hình ảnh không hợp lệ' }).optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password2, {
     message: 'Mật khẩu xác nhận không khớp',
-    path: ['confirmPassword'],
+    path: ['password2'],
   });
 
 export type LoginSchema = z.infer<typeof loginSchema>;

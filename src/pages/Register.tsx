@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { close, eye } from 'ionicons/icons';
 import { styled } from '@mui/material/styles';
@@ -7,6 +7,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useFormContext } from 'react-hook-form';
 import Error from '../components/Error';
 import Process from '../components/Process';
+import { useDispatch } from 'react-redux';
+import { RegisterAuth } from '../store/slice/Auth';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -29,11 +31,30 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useFormContext();
+  const [avatar, setAvatar] = useState();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    //clean up
+    return () => {
+      avatar && URL.revokeObjectURL(avatar.preview);
+    };
+  }, [avatar]);
+
+  const handleChooseAvatar = (e) => {
+    const file = e.target.files[0];
+
+    file.preview = URL.createObjectURL(file);
+    setAvatar(file.preview);
+  };
 
   const onSubmit = () => {
     const formData = watch();
-    console.log('formData:', formData);
+    console.log(formData);
+    dispatch(RegisterAuth(formData));
+    reset();
   };
 
   return (
@@ -71,47 +92,21 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                     <label className="input-label" htmlFor="fullNameSrEmail">
                       Họ & Tên
                     </label>
-                    <div className="form-row">
-                      <div className="col-sm-6">
-                        <div className="js-form-message form-group">
-                          <input
-                            type="name"
-                            className={`form-control form-control-lg ${
-                              errors.name ? 'error' : 'success'
-                            }`}
-                            id="name"
-                            placeholder="Chi"
-                            aria-label="******"
-                            data-msg="Please enter a valid email address."
-                            {...register('name')}
-                          />
-                          {errors.name && (
-                            <Error error={errors.name.message?.toString()} />
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="col-sm-6">
-                        <div className="js-form-message form-group">
-                          <input
-                            type="fullName"
-                            className={`form-control form-control-lg ${
-                              errors.fullName ? 'error' : 'success'
-                            }`}
-                            id="fullName"
-                            placeholder="Vo"
-                            aria-label="******"
-                            data-msg="Please enter a valid email address."
-                            {...register('fullName')}
-                          />
-                          {errors.fullName && (
-                            <Error
-                              error={errors.fullName.message?.toString()}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <input
+                      className={`form-control form-control-lg ${
+                        errors.fullName ? 'error' : 'success'
+                      }`}
+                      id="fullName"
+                      placeholder="Nhập họ & tên"
+                      aria-label="Chivo@gmail.com"
+                      data-msg="Please enter a valid fullName address."
+                      {...register('fullName')}
+                    />
+                    {errors.fullName && (
+                      <Error error={errors.fullName.message?.toString()} />
+                    )}
+                  </div>
+                  <div className="js-form-message form-group">
                     <label className="input-label">Email</label>
                     <input
                       className={`form-control form-control-lg ${
@@ -178,18 +173,16 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                       <input
                         type="password"
                         className={`form-control form-control-lg ${
-                          errors.confirmPassword ? 'error' : 'success'
+                          errors.password2 ? 'error' : 'success'
                         }`}
                         id="signinSrconfirmPassword"
                         placeholder="******"
                         aria-label="******"
                         data-msg="Please enter a valid confirmPassword address."
-                        {...register('confirmPassword')}
+                        {...register('password2')}
                       />
-                      {errors.confirmPassword && (
-                        <Error
-                          error={errors.confirmPassword.message?.toString()}
-                        />
+                      {errors.password2 && (
+                        <Error error={errors.password2.message?.toString()} />
                       )}
                       <div id="changePassTarget" className="input-group-append">
                         <a className="input-group-text">
@@ -198,7 +191,7 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                       </div>
                     </div>
                   </div>
-                  <Button
+                  {/* <Button
                     component="label"
                     role={undefined}
                     variant="contained"
@@ -206,8 +199,17 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
                     startIcon={<CloudUploadIcon />}
                   >
                     Avatar
-                    <VisuallyHiddenInput type="file" />
+                    <VisuallyHiddenInput
+                      type="file"
+                      {...register('imgUrl')}
+                      onChange={handleChooseAvatar}
+                    />
                   </Button>
+                  <img
+                    src={avatar}
+                    alt=""
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                  /> */}
                   {/* End Form Group */}
 
                   {/* Checkbox */}

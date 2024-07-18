@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import '../styles/vector.css';
 import '../styles/vendor.css';
 import '../styles/themmin.css';
@@ -6,28 +6,42 @@ import { IonIcon } from '@ionic/react';
 import { close, eye } from 'ionicons/icons';
 import ForgetPassword from './ForgetPassword';
 import Error from '../components/Error';
-import Process from '../components/Process';
 import { useFormContext } from 'react-hook-form';
 import UserProvider from '../context/UserContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/slice/Auth';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { LoginModalContext } from '../context/LoginContext';
 interface LoginProps {
   onSwitchToRegister: () => void;
 }
 
 const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
   const [activeForm, setActiveForm] = useState('login');
+  const { showLoginModal, setShowLoginModal } = useContext(LoginModalContext);
+
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useFormContext();
 
   const handleShowForgotPasswordForm = () => {
     setActiveForm('forgotPassword');
+    navigator('/forget-Password');
   };
 
-  const onSubmit = () => {
-    console.log('submit');
+  const onSubmit = (data: { email: string; password: string }) => {
+    dispatch(login(data));
+    reset();
+    toast.success('Đăng nhập thành công');
+    setShowLoginModal(!showLoginModal);
+    // navigator('/#');
   };
 
   return (
@@ -49,7 +63,6 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                       <div className="text-center">
                         <div className="mb-5">
                           <h1 className="display-4">Đăng nhập</h1>
-                          <Process />
                         </div>
 
                         <a
@@ -99,7 +112,7 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                           tabIndex={0}
                         >
                           <span className="d-flex justify-content-between align-items-center">
-                            Password
+                            Mật khẩu
                             <a
                               onClick={handleShowForgotPasswordForm}
                               className="input-label-secondary"
@@ -116,7 +129,7 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                               errors.password ? 'error' : 'success'
                             }`}
                             id="signupSrPassword"
-                            placeholder="8+ characters "
+                            placeholder="******** "
                             aria-label="8+ characters "
                             data-msg="Your password is invalid. Please try again."
                             data-hs-toggle-password-options='{
@@ -174,7 +187,7 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                         type="submit"
                         className="btn btn-lg btn-block btn-primary"
                       >
-                        Sign in
+                        Đăng nhập
                       </button>
                     </form>
                     {/* End Form */}
