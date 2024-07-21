@@ -10,7 +10,6 @@ import { useFormContext } from 'react-hook-form';
 import UserProvider from '../context/UserContext';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/slice/Auth';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LoginModalContext } from '../context/LoginContext';
 interface LoginProps {
@@ -22,7 +21,6 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
   const { showLoginModal, setShowLoginModal } = useContext(LoginModalContext);
 
   const dispatch = useDispatch();
-  const navigator = useNavigate();
 
   const {
     register,
@@ -33,7 +31,6 @@ const LogIn: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
 
   const handleShowForgotPasswordForm = () => {
     setActiveForm('forgotPassword');
-    navigator('/forget-Password');
   };
 
   const onSubmit = (data: { email: string; password: string }) => {

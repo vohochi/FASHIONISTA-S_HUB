@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from './slice/cart';
 import authSlice from './slice/Auth';
 import usersSlice from './slice/Users';
+import orderSlice from './slice/order';
 
 // Khởi tạo state từ localStorage
 const persistedState = localStorage.getItem('reduxState')
@@ -10,7 +11,12 @@ const persistedState = localStorage.getItem('reduxState')
 
 // Tạo Redux store với reducer của giỏ hàng và state được khởi tạo từ localStorage
 const store = configureStore({
-  reducer: { cart: cartReducer, auth: authSlice, users: usersSlice },
+  reducer: {
+    cart: cartReducer,
+    auth: authSlice,
+    users: usersSlice,
+    orders: orderSlice,
+  },
   preloadedState: persistedState,
 });
 

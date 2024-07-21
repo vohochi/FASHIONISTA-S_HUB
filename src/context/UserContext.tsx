@@ -5,7 +5,7 @@ import {
   loginSchema,
   RegisterSchema,
   registerSchema,
-} from '../types/schema/user.schema';
+} from '../types/schema/userSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import LogIn from '../pages/LogIn';
 import Register from '../pages/Register';

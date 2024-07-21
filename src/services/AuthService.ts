@@ -1,4 +1,4 @@
-const http = 'http://127.0.0.1:3000/api';
+const http = 'http://127.0.0.1:3000/api/v1/users';
 export const registerUser = async (userData: {
   fullName: string;
   email: string;
@@ -6,7 +6,7 @@ export const registerUser = async (userData: {
   password2: string;
 }) => {
   try {
-    const response = await fetch(`${http}/users/register`, {
+    const response = await fetch(`${http}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const loginUser = async (userData: {
   password: string;
 }) => {
   try {
-    const response = await fetch(`${http}/users/login`, {
+    const response = await fetch(`${http}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,6 +58,55 @@ export const getAllUsers = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      return { ok: true, data };
+    } else {
+      const error = await response.json();
+      return { ok: false, error };
+    }
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};
+export const forgetUser = async (email: string) => {
+  try {
+    const response = await fetch(`${http}/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      return { ok: true, data };
+    } else {
+      const error = await response.json();
+      return { ok: false, error };
+    }
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};
+export const resetPasswordUser = async (userData: {
+  token: string;
+  newPassword: string;
+}) => {
+  try {
+    const response = await fetch(`${http}/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
       return { ok: true, data };
     } else {
       const error = await response.json();

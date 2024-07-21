@@ -66,19 +66,19 @@ const Products: React.FC = () => {
   };
   return (
     <>
-      <div className="navigation">
-        <span className="separator">Trang Chủ</span>
-        <span className="separator">/</span>
-        <span
-          style={{ textDecoration: 'underline', fontWeight: 'bold' }}
-          className="separator"
-        >
-          Sản phẩm
-        </span>
-      </div>
       <div className="product-container">
         <div className="container">
           <div className="sidebar has-scrollbar" data-mobile-menu>
+            <div className="navigation">
+              <span className="separator">Trang Chủ</span>
+              <span className="separator">/</span>
+              <span
+                style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+                className="separator"
+              >
+                Sản phẩm
+              </span>
+            </div>
             <div className="sidebar-category">
               <div className="sidebar-top">
                 <h2 className="sidebar-title">Danh mục</h2>
@@ -236,8 +236,8 @@ const Products: React.FC = () => {
           <div className="product-box">
             <div className="product-main">
               <div className="filter-menu">
-                <div className="filter-title">Lọc sản phẩm</div>
                 <div className="filter-options">
+                  <div className="filter-title">Lọc sản phẩm</div>
                   <div className="filter-option d-flex align-items-center">
                     <select
                       id="category"

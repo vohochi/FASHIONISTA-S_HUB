@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { IonIcon } from '@ionic/react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import Switch from '@mui/material/Switch';
 import {
@@ -13,11 +13,14 @@ import {
   logoTwitter,
   logoInstagram,
   logoLinkedin,
+  logOutOutline,
 } from 'ionicons/icons';
 import UserProvider from '../context/UserContext';
 import { selectCartItems } from '../store/slice/cart';
 import { LoginModalContext } from '../context/LoginContext';
 import BadgeAvatars from './Avatar';
+import { logOut } from '../store/slice/Auth';
+import { Bounce, toast } from 'react-toastify';
 const label = { inputProps: { 'aria-label': 'Color switch demo' } };
 
 const HeaderTop: React.FC = () => {
@@ -25,11 +28,15 @@ const HeaderTop: React.FC = () => {
 
   const navigate = useNavigate();
   const count = useSelector(selectCartItems).length;
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+
+  const image = user?.image;
+  const dispatch = useDispatch();
 
   const handleShowLoginModal = () => {
-    setShowLoginModal(true);
-    // navigate('/login');
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+    }
   };
 
   const handleCloseLoginModal = () => {
@@ -146,9 +153,28 @@ const HeaderTop: React.FC = () => {
                 </div>
               </Modal>
               {isLoggedIn == true ? (
-                <IonIcon icon={personOutline} />
+                <div className="d-flex align-items-center">
+                  <BadgeAvatars avatar={image} />
+                  <IonIcon
+                    icon={logOutOutline}
+                    onClick={() => {
+                      dispatch(logOut());
+                      toast.error('Bạn đã đăng xuất!', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'light',
+                      });
+                    }}
+                    className="ml-2"
+                  />
+                </div>
               ) : (
-                <BadgeAvatars />
+                <IonIcon icon={personOutline} />
               )}
             </button>
             <button className="action-btn">
@@ -157,7 +183,21 @@ const HeaderTop: React.FC = () => {
             </button>
             <button
               className="action-btn"
-              onClick={() => handleNavigate('/cart')}
+              onClick={() => {
+                isLoggedIn === true
+                  ? handleNavigate('/cart')
+                  : toast.warn('Vui lòng đăng nhập để xem được giỏ hàng', {
+                      position: 'top-center',
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'light',
+                      transition: Bounce,
+                    });
+              }}
             >
               <IonIcon icon={bagHandleOutline} />
               <span className="count">{count}</span>
@@ -181,33 +221,19 @@ const HeaderTop: React.FC = () => {
                 Sản phẩm
               </a>
             </li>{' '}
-            <li
-              className="menu-category"
-              onClick={() => handleNavigate('/checkOut')}
-            >
-              <a href="#" className="menu-title">
-                Hệ thống cửa hàng
-              </a>
-            </li>
-            <li
-              className="menu-category"
-              onClick={() => handleNavigate('/checkOut')}
-            >
-              <a href="#" className="menu-title">
-                Thanh toán
-              </a>
-            </li>
             <li className="menu-category">
               <a href="#" className="menu-title">
                 Blog
               </a>
-            </li>
-            <li
-              className="menu-category"
-              onClick={() => handleNavigate('/profile')}
-            >
+            </li>{' '}
+            <li className="menu-category">
               <a href="#" className="menu-title">
-                Profile
+                Liên hệ
+              </a>
+            </li>
+            <li className="menu-category">
+              <a href="#" className="menu-title">
+                Hệ thống cửa hàng
               </a>
             </li>
           </ul>

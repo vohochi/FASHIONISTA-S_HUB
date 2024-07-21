@@ -37,9 +37,9 @@ export const useFetch = (
       try {
         let res;
         if (method === 'GET') {
-          res = await fetch(`http://localhost:3000/api/${url}`);
+          res = await fetch(`http://localhost:3000/api/v1/${url}`);
         } else {
-          res = await fetch(`http://localhost:3000/api/${url}`, {
+          res = await fetch(`http://localhost:3000/api/v1/${url}`, {
             method,
             headers: {
               'Content-Type': 'application/json',

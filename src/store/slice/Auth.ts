@@ -1,14 +1,19 @@
-// authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { loginUser, registerUser } from '../../services/AuthService';
+import {
+  forgetUser,
+  loginUser,
+  registerUser,
+  resetPasswordUser,
+} from '../../services/AuthService';
 
 export const login = createAsyncThunk(
-  'api/login',
+  'api/v1/users/login',
   async (credentials: { email: string; password: string }) => {
     const response = await loginUser(credentials);
+    console.log(response);
     const loginData = {
-      imageUrl: response.data.user.image,
+      image: response.data.user.image,
       fullName: response.data.user.username,
       email: response.data.user.email,
       accessToken: response.data.accessToken,
@@ -34,6 +39,22 @@ export const RegisterAuth = createAsyncThunk(
   }
 );
 
+export const forgetAuth = createAsyncThunk(
+  'user/forgot',
+  async (email: string) => {
+    const response = await forgetUser(email);
+    return response.data;
+  }
+);
+export const resetPasswordAuth = createAsyncThunk(
+  'users/create',
+  async (userData: { token: string; newPassword: string }) => {
+    const response = await resetPasswordUser(userData);
+
+    return response.data;
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -54,13 +75,13 @@ const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
+        console.log(action.payload);
         state.isLoggedIn = true;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.user = null;
         state.isLoggedIn = false;
-        state.error = action.error.message;
       });
   },
 });

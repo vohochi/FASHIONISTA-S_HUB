@@ -1,7 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCartItems, selectCartTotal } from '../store/slice/cart';
 import { Currency } from '../utils/Currency';
+import { useFormContext } from 'react-hook-form';
+import Error from '../components/Error';
+import { createOrder } from '../store/slice/order';
+import { Bounce, toast } from 'react-toastify';
 
 interface Props {
   // define your props here
@@ -10,8 +14,50 @@ interface Props {
 const CheckOut: React.FC<Props> = () => {
   const totalCart = useSelector(selectCartTotal);
   const cartItems = useSelector(selectCartItems);
+  // console.log(cartItems);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const email = user?.email;
+  const fullName = user?.fullName;
 
-  const { fullName, email } = JSON.parse(localStorage.getItem('loginData'));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    reset,
+  } = useFormContext();
+
+  const onSubmit = () => {
+    const formData = watch();
+    const data = {
+      products: cartItems.map((item) => ({
+        _id: item._id,
+        quantity: item.quantity,
+        price: item.price,
+        name: item.name,
+        image: item.image,
+      })),
+      shippingAddress: {
+        ...formData,
+      },
+      totalPrice: totalCart,
+    };
+    dispatch(createOrder(data));
+
+    reset();
+    toast.success('Cập nhật thông tin cá nhân thành công', {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
+  };
 
   return (
     <div className="container">
@@ -30,7 +76,7 @@ const CheckOut: React.FC<Props> = () => {
                   <div className="feed-item-list">
                     <div>
                       <div className="mb-3">
-                        <form>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                           <div>
                             <div className="row">
                               <div className="col-lg-4">
@@ -43,12 +89,19 @@ const CheckOut: React.FC<Props> = () => {
                                   </label>
                                   <input
                                     type="text"
-                                    className="form-control"
+                                    className={`form-control ${
+                                      errors.fullName ? 'error' : 'success'
+                                    }`}
                                     id="billing-name"
                                     placeholder="Nhập tên"
                                     value={fullName}
-                                    disabled
+                                    {...register('fullName')}
                                   />
+                                  {errors.fullName && (
+                                    <Error
+                                      error={errors.fullName.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
                               <div className="col-lg-4">
@@ -61,12 +114,19 @@ const CheckOut: React.FC<Props> = () => {
                                   </label>
                                   <input
                                     type="email"
-                                    className="form-control"
+                                    className={`form-control ${
+                                      errors.email ? 'error' : 'success'
+                                    }`}
                                     id="billing-email-address"
                                     placeholder="Nhập Email"
                                     value={email}
-                                    disabled
+                                    {...register('email')}
                                   />
+                                  {errors.email && (
+                                    <Error
+                                      error={errors.email.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
                               <div className="col-lg-4">
@@ -78,11 +138,17 @@ const CheckOut: React.FC<Props> = () => {
                                     Số điện thoại
                                   </label>
                                   <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     id="billing-phone"
                                     placeholder="Nhập số điện thoại"
+                                    {...register('phone')}
                                   />
+                                  {errors.phone && (
+                                    <Error
+                                      error={errors.phone.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -99,7 +165,13 @@ const CheckOut: React.FC<Props> = () => {
                                 id="billing-address"
                                 // rows="3"
                                 placeholder="Địa chỉ nhận hàng"
+                                {...register('address')}
                               ></textarea>
+                              {errors.address && (
+                                <Error
+                                  error={errors.address.message?.toString()}
+                                />
+                              )}
                             </div>
 
                             <div className="row">
@@ -111,10 +183,16 @@ const CheckOut: React.FC<Props> = () => {
                                   <select
                                     className="form-control form-select"
                                     title="city"
+                                    {...register('city')}
                                   >
                                     <option value="0">Select Country</option>
                                     <option value="AF">Afghanistan</option>
                                   </select>
+                                  {errors.city && (
+                                    <Error
+                                      error={errors.city.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
 
@@ -131,7 +209,13 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-control"
                                     id="billing-city"
                                     placeholder="Chọn quận/ huyện"
+                                    {...register('village')}
                                   />
+                                  {errors.village && (
+                                    <Error
+                                      error={errors.village.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
 
@@ -148,17 +232,30 @@ const CheckOut: React.FC<Props> = () => {
                                     className="form-control"
                                     id="zip-code"
                                     placeholder="Chọn phường/ xã"
+                                    {...register('wards')}
                                   />
+                                  {errors.wards && (
+                                    <Error
+                                      error={errors.wards.message?.toString()}
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
                           </div>
+                          <button
+                            type="submit"
+                            className="btn btn-success text-end"
+                            style={{ margin: '10px', float: 'right' }}
+                          >
+                            <i className="mdi mdi-cart-outline me-1"></i> Thanh
+                            toán
+                          </button>
                         </form>
                       </div>
                     </div>
                   </div>
                 </li>
-                {/* Shipping Info and Payment Info sections would go here, similar to the Billing Info section */}
               </ol>
             </div>
           </div>
@@ -173,11 +270,7 @@ const CheckOut: React.FC<Props> = () => {
               </a>
             </div>
             <div className="col">
-              <div className="text-end mt-2 mt-sm-0">
-                <a href="#" className="btn btn-success">
-                  <i className="mdi mdi-cart-outline me-1"></i> Thanh toán
-                </a>
-              </div>
+              <div className="text-end mt-2 mt-sm-0"></div>
             </div>
           </div>
         </div>

@@ -43,7 +43,6 @@ const Categories: React.FC<Props> = ({ onCategoryChange }) => {
                   <div className="category-content-box">
                     <div className="category-content-flex">
                       <h3 className="category-item-title">{item.name}</h3>
-                      <p className="category-item-amount">({item.quantity})</p>
                     </div>
 
                     <a className="category-btn">Show all</a>

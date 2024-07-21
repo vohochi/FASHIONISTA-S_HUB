@@ -25,29 +25,12 @@ export const createUserAsync = createAsyncThunk(
   }
 );
 
-// export const updateUserAsync = createAsyncThunk(
-//   'users/update',
-//   async (userData) => {
-//     const response = await updateUser(userData);
-//     return response.data;
-//   }
-// );
-
-// export const deleteUserAsync = createAsyncThunk(
-//   'users/delete',
-//   async (userId) => {
-//     await deleteUser(userId);
-//     return userId;
-//   }
-// );
-
 const usersSlice = createSlice({
   name: 'users',
   initialState: {
     data: [],
     loading: false,
     error: null,
-    // isSuccess: false,
   },
   reducers: {},
   extraReducers: (builder) => {

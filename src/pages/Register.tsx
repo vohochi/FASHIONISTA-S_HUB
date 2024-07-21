@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { IonIcon } from '@ionic/react';
 import { close, eye } from 'ionicons/icons';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+// import { styled } from '@mui/material/styles';
+// import Button from '@mui/material/Button';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useFormContext } from 'react-hook-form';
 import Error from '../components/Error';
 import Process from '../components/Process';
 import { useDispatch } from 'react-redux';
 import { RegisterAuth } from '../store/slice/Auth';
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
+// const VisuallyHiddenInput = styled('input')({
+//   clip: 'rect(0 0 0 0)',
+//   clipPath: 'inset(50%)',
+//   height: 1,
+//   overflow: 'hidden',
+//   position: 'absolute',
+//   bottom: 0,
+//   left: 0,
+//   whiteSpace: 'nowrap',
+//   width: 1,
+// });
 
 interface RegisterProps {
   onSwitchToLogin: () => void;
@@ -33,22 +33,22 @@ const Register: React.FC<RegisterProps> = ({ onSwitchToLogin }) => {
     watch,
     reset,
   } = useFormContext();
-  const [avatar, setAvatar] = useState();
   const dispatch = useDispatch();
+  // const [avatar, setAvatar] = useState();
 
-  useEffect(() => {
-    //clean up
-    return () => {
-      avatar && URL.revokeObjectURL(avatar.preview);
-    };
-  }, [avatar]);
+  // useEffect(() => {
+  //   //clean up
+  //   return () => {
+  //     avatar && URL.revokeObjectURL(avatar.preview);
+  //   };
+  // }, [avatar]);
 
-  const handleChooseAvatar = (e) => {
-    const file = e.target.files[0];
+  // const handleChooseAvatar = (e) => {
+  //   const file = e.target.files[0];
 
-    file.preview = URL.createObjectURL(file);
-    setAvatar(file.preview);
-  };
+  //   file.preview = URL.createObjectURL(file);
+  //   setAvatar(file.preview);
+  // };
 
   const onSubmit = () => {
     const formData = watch();

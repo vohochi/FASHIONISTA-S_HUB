@@ -10,12 +10,10 @@ import ShoppingCart from './pages/Cart';
 import Profile from './pages/Profile';
 import MainLayout from './routes/MainRouter';
 import Products from './pages/Products';
-import CheckOut from './pages/CheckOut';
-import ForgetPassword from './pages/ForgetPassword';
 import Users from './pages/admin/Users';
 import { LoginProvider } from './context/LoginContext';
-// import LogIn from './pages/LogIn';
-// import Register from './pages/Register';
+import OrderProvider from './context/OrderContext';
+import Invoice from './pages/Invoice';
 
 const App: React.FC = () => (
   <Router>
@@ -27,8 +25,8 @@ const App: React.FC = () => (
           <Route path="Products" element={<Products />} />
           <Route path="cart" element={<ShoppingCart />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="checkOut" element={<CheckOut />} />
-          <Route path="forget-Password" element={<ForgetPassword />} />
+          <Route path="checkOut" element={<OrderProvider />} />
+          <Route path="invoice" element={<Invoice />} />
         </Route>
         <Route path="/admin" element={<AdminRouter />}>
           <Route index element={<Dashboard />} />

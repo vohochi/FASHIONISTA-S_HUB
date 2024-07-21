@@ -26,6 +26,7 @@ import ProductBestSeller from '../components/ProductBestSeller';
 import BestSeller from '../components/BestSeller';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/slice/cart';
+import { Bounce, toast } from 'react-toastify';
 // import Message from '../components/Message';
 
 const Home: React.FC = () => {
@@ -34,10 +35,19 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const handleAddItem = (item) => {
-    console.log(item);
     dispatch(addItem(item));
     // <Message />;
-    alert('Thêm sản phẩm vào giỏ hàng thành công');
+    toast.success('Thêm vào giỏ hàng thành công', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
   };
   // show chi tiet san pham
   const handleDetailProduct = (productID: string) => {

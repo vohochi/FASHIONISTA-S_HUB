@@ -8,6 +8,7 @@ import { Currency } from '../utils/Currency';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/slice/cart';
+import { Bounce, toast } from 'react-toastify';
 
 const Detail: React.FC = () => {
   const { id } = useParams();
@@ -34,7 +35,17 @@ const Detail: React.FC = () => {
     const itemToAdd = { ...item, quantity: countHandle };
     console.log(itemToAdd);
     dispatch(addItem(itemToAdd));
-    alert('Thêm sản phẩm vào giỏ hàng thành công');
+    toast.success('Thêm vào giỏ hàng thành công', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
   };
 
   const {

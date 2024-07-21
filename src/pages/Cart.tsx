@@ -159,7 +159,10 @@ const Cart: React.FC = () => {
                       <hr className="my-4" />
                       <div className="pt-5">
                         <h6 className="mb-0">
-                          <a href="#!" className="text-body">
+                          <a
+                            onClick={() => navigation('/#')}
+                            className="text-body"
+                          >
                             <i className="fas fa-long-arrow-alt-left me-2" />
                             Back to shop
                           </a>
