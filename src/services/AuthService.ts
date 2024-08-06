@@ -68,6 +68,8 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+// forget pass
+
 export const forgetUser = async (email: string) => {
   try {
     const response = await fetch(`${http}/forgot-password`, {
@@ -91,6 +93,8 @@ export const forgetUser = async (email: string) => {
     throw error;
   }
 };
+
+// reset pass
 export const resetPasswordUser = async (userData: {
   token: string;
   newPassword: string;
@@ -107,6 +111,44 @@ export const resetPasswordUser = async (userData: {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
+      return { ok: true, data };
+    } else {
+      const error = await response.json();
+      return { ok: false, error };
+    }
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};
+
+// profile
+export const updateProfile = async (
+  email: string,
+  fullName: string,
+  phone: string,
+  address: string,
+  image: File | null
+) => {
+  const requestData = {
+    email,
+    fullName,
+    phone,
+    address,
+    img: image || null,
+  };
+
+  try {
+    const response = await fetch(`${http}/update-profile/${email}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
       return { ok: true, data };
     } else {
       const error = await response.json();

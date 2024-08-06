@@ -3,6 +3,7 @@ import {
   orderAll,
   orderByEmail,
   orderCreate,
+  orderPayment,
 } from '../../services/OrderService';
 
 export const createOrder = createAsyncThunk(
@@ -10,12 +11,14 @@ export const createOrder = createAsyncThunk(
   async (credentials) => {
     try {
       const response = await orderCreate(credentials);
+      await orderPayment();
       return response.data;
     } catch (error) {
       throw error.response.data.message;
     }
   }
 );
+
 export const byEmailOrder = createAsyncThunk(
   'orders/byEmail',
   async (credentials: string) => {

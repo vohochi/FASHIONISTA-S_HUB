@@ -1,17 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { updateProfile } from '../../services/AuthService';
 
 import {
   forgetUser,
   loginUser,
   registerUser,
   resetPasswordUser,
+  updateProfile,
 } from '../../services/AuthService';
 
 export const login = createAsyncThunk(
   'api/v1/users/login',
   async (credentials: { email: string; password: string }) => {
     const response = await loginUser(credentials);
-    console.log(response);
     const loginData = {
       image: response.data.user.image,
       fullName: response.data.user.username,
@@ -54,6 +55,22 @@ export const resetPasswordAuth = createAsyncThunk(
     return response.data;
   }
 );
+export const updateProfileUser = createAsyncThunk(
+  'users/updateProfile',
+  async (userData: FormData) => {
+    const { email, fullName, phone, address, image } =
+      Object.fromEntries(userData);
+    const response = await updateProfile(
+      email,
+      fullName,
+      phone,
+      address,
+      image
+    );
+
+    return response.data;
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -75,13 +92,15 @@ const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
-        console.log(action.payload);
         state.isLoggedIn = true;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.user = null;
         state.isLoggedIn = false;
+      })
+      .addCase(updateProfileUser.fulfilled, (state, action) => {
+        state.user = action.payload.user;
       });
   },
 });

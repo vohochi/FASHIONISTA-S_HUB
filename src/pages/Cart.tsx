@@ -22,15 +22,16 @@ import { addOutline, removeOutline, trashOutline } from 'ionicons/icons';
 import Success from '../components/Success';
 import Error from '../components/Error';
 import { useNavigate } from 'react-router-dom';
+import { Bounce, toast } from 'react-toastify';
 
 const Cart: React.FC = () => {
   // Lấy thông tin bên handleAddItem
-  const cartItems = useSelector(selectCartItems);
-  const totalCart = useSelector(selectCartTotal);
   const shippingFee = useSelector(selectShippingFee);
-
-  const dispatch = useDispatch();
   const navigation = useNavigate();
+
+  const totalCart = useSelector(selectCartTotal);
+  const cartItems = useSelector(selectCartItems);
+  const dispatch = useDispatch();
 
   const [discountCode, setDiscountCodes] = useState<string | null>(null);
 
@@ -38,10 +39,32 @@ const Cart: React.FC = () => {
 
   const handleRemoveItem = (itemID: string) => {
     dispatch(removeItem(itemID));
+    toast.error('Xóa sản phẩm khỏi giỏ hàng', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
   };
 
   const handleClearCart = () => {
     dispatch(clearCart());
+    toast.error('Đã xóa hết sản phẩm khỏi giỏ hàng', {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
   };
   const handleIncrease = (itemID: string) => {
     dispatch(increaseQuantity(itemID));
@@ -215,7 +238,6 @@ const Cart: React.FC = () => {
                             <Success message="Mã giảm giá của bạn hợp lệ" />
                           )}{' '}
                         </div>
-                        <Error error="Mã giảm giá của bạn không hợp lệ" />
                       </div>
 
                       <hr className="my-4" />

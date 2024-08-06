@@ -1,116 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { byEmailOrder, getAllOrder } from '../store/slice/order';
+import { byEmailOrder } from '../store/slice/order';
+import { RootState } from '../store';
+import { Currency } from '../utils/Currency';
+import AlertDialogSlide from '../components/SuccessOrder';
 
-interface Props {
-  // define your props here
-}
-
-const Invoice: React.FC<Props> = () => {
+const Invoice: React.FC = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.orders);
+  const { data } = useSelector((state: RootState) => state.orders);
   const { user } = useSelector((state) => state.auth);
   const email = user?.email;
+  const [showDialog, setShowDialog] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState(null);
+
   useEffect(() => {
     dispatch(byEmailOrder(email));
-    console.log(data);
-  }, []);
+  }, [dispatch, email]);
+
+  const handleDetail = (order) => {
+    setCurrentOrder(order);
+    setShowDialog(true);
+  };
 
   return (
-    <>
-      {/* Hello world */}
-      <div className="container">
-        <div className="col-md-12">
-          <div className="invoice">
-            {/* begin invoice-company */}
-            <h2>Đơn hàng của bạn</h2>
-            {/* end invoice-company */}
-            {/* begin invoice-header */}
-            <div className="invoice-header">
-              <div className="invoice-from">
-                <small>Thông tin</small>
-                <address className="m-t-5 m-b-5">
-                  <strong className="text-inverse">Twitter, Inc.</strong>
-                  <br />
-                  Street Address
-                  <br />
-                  City, Zip Code
-                  <br />
-                  Phone: (123) 456-7890
-                  <br />
-                  Fax: (123) 456-7890
-                </address>
-              </div>
-              <div className="invoice-to">
-                <small>to</small>
-                <address className="m-t-5 m-b-5">
-                  <strong className="text-inverse">Company Name</strong>
-                  <br />
-                  Street Address
-                  <br />
-                  City, Zip Code
-                  <br />
-                  Phone: (123) 456-7890
-                  <br />
-                  Fax: (123) 456-7890
-                </address>
-              </div>
-              <div className="invoice-date">
-                <small>Invoice / July period</small>
-                <div className="date text-inverse m-t-5">August 3,2012</div>
-                <div className="invoice-detail">
-                  #0000123DSS
-                  <br />
-                  Services Product
-                </div>
-              </div>
-            </div>
-            {/* end invoice-header */}
-            {/* begin invoice-content */}
-            <div className="invoice-content">
-              {/* begin table-responsive */}
-              <div className="table-responsive">
-                <table className="table table-invoice">
-                  <thead>
-                    <tr>
-                      <th>Mã đơn hàng</th>
-                      <th className="text-center">Ngày đặt hàng</th>
-                      <th className="text-center">Tổng giá trị đơn hàng</th>
-                      <th className="text-center">Trạng thái đơn hàng</th>
-                      <th className="text-right">Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <small>sdf</small>
+    <div className="container">
+      <div className="col-md-12">
+        <div className="invoice">
+          <div className="invoice-content">
+            <div className="table-responsive">
+              <table className="table table-invoice">
+                <thead>
+                  <tr>
+                    <th className="text-center">Đơn hàng</th>
+                    <th className="text-center">Ngày đặt hàng</th>
+                    <th className="text-center">Tổng giá trị đơn hàng</th>
+                    <th className="text-center">Trạng thái đơn hàng</th>
+                    <th className="text-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item, key) => (
+                    <tr key={key}>
+                      <td className="text-center">{item._id}</td>
+                      <td className="text-center">{item.createdAt}</td>
+                      <td className="text-center">
+                        {Currency(item.totalPrice)}
                       </td>
-                      <td className="text-center">$50.00</td>
-                      <td className="text-center">50</td>
-                      <td className="text-right">$2,500.00</td>
-                      <td className="text-right">
+                      <td className="text-center">
                         <button className="btn btn-primary">Đang xử lý</button>
                       </td>
+                      <td
+                        className="text-center"
+                        onClick={() => handleDetail(item)}
+                      >
+                        <i className="bi bi-receipt fs-3 text-primary"></i>
+                      </td>
                     </tr>
-                  </tbody>
-                </table>
-              </div>
-              {/* end table-responsive */}
-              {/* begin invoice-price */}
-
-              {/* end invoice-price */}
+                  ))}
+                </tbody>
+              </table>
             </div>
-            {/* end invoice-content */}
-            {/* begin invoice-note */}
-
-            {/* end invoice-note */}
-            {/* begin invoice-footer */}
-
-            {/* end invoice-footer */}
           </div>
         </div>
       </div>
-    </>
+      {showDialog && currentOrder && (
+        <AlertDialogSlide
+          products={currentOrder.products}
+          shippingAddress={currentOrder.shippingAddress}
+          onClose={() => setShowDialog(false)}
+        />
+      )}
+    </div>
   );
 };
 

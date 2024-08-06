@@ -1,11 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCartItems, selectCartTotal } from '../store/slice/cart';
+import {
+  clearCart,
+  selectCartItems,
+  selectCartTotal,
+} from '../store/slice/cart';
 import { Currency } from '../utils/Currency';
 import { useFormContext } from 'react-hook-form';
 import Error from '../components/Error';
 import { createOrder } from '../store/slice/order';
 import { Bounce, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   // define your props here
@@ -15,10 +20,13 @@ const CheckOut: React.FC<Props> = () => {
   const totalCart = useSelector(selectCartTotal);
   const cartItems = useSelector(selectCartItems);
   // console.log(cartItems);
+  const navigator = useNavigate();
+
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const email = user?.email;
   const fullName = user?.fullName;
+  const phone = user?.phone;
 
   const {
     register,
@@ -44,9 +52,12 @@ const CheckOut: React.FC<Props> = () => {
       totalPrice: totalCart,
     };
     dispatch(createOrder(data));
+    dispatch(clearCart());
 
     reset();
-    toast.success('Cập nhật thông tin cá nhân thành công', {
+
+    navigator('/invoice');
+    toast.success('Cập nhật thông thành công', {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
@@ -141,6 +152,7 @@ const CheckOut: React.FC<Props> = () => {
                                     type="number"
                                     className="form-control"
                                     id="billing-phone"
+                                    value={phone}
                                     placeholder="Nhập số điện thoại"
                                     {...register('phone')}
                                   />

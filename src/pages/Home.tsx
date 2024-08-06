@@ -31,12 +31,14 @@ import { Bounce, toast } from 'react-toastify';
 
 const Home: React.FC = () => {
   const productMainRef = useRef(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleAddItem = (item) => {
     dispatch(addItem(item));
     // <Message />;
+    
     toast.success('Thêm vào giỏ hàng thành công', {
       position: 'top-right',
       autoClose: 2000,
